@@ -1,3 +1,4 @@
+import { toastr } from "react-redux-toastr";
 import { auth, firestore, serverTimestamp } from "src/Firebase/Firebase";
 import { REMOVE_USER, SET_USER } from "./authConstants";
 
@@ -12,7 +13,7 @@ export var removeUser = (user) => ({
   type: REMOVE_USER,
 });
 
-export var signup = ({ email, password, name }) => async (dispatch) => {
+export var signup = (email, password, name) => async (dispatch) => {
   try {
     var {
       user: { uid },
@@ -25,24 +26,30 @@ export var signup = ({ email, password, name }) => async (dispatch) => {
       createdAt: serverTimestamp(),
     };
     await firestore.collection("users").doc(uid).set(userInfo);
+    toastr.success("Sign up Complete");
   } catch (error) {
     console.log(error);
+    toastr.error("Error", error.message);
   }
 };
 
-export var signin = ({ email, password }) => async (dispatch) => {
+export var signin = (email, password) => async (dispatch) => {
   try {
     await auth.signInWithEmailAndPassword(email, password);
+    toastr.success("Sign in Complete");
   } catch (error) {
     console.log(error);
+    toastr.error("Error", error.message);
   }
 };
 
 export var signout = () => async (dispatch) => {
   try {
     await auth.signOut();
+    toastr.success("Signed Out...");
   } catch (error) {
     console.log(error);
+    toastr.error("Error", error.message);
   }
 };
 

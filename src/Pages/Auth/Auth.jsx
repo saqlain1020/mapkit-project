@@ -43,7 +43,7 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-const Auth = ({ signin }) => {
+const Auth = ({ signin,signup }) => {
   const classes = useStyle();
   const [signState, setSignState] = React.useState(false);
   const [state, setState] = React.useState({
@@ -65,10 +65,10 @@ const Auth = ({ signin }) => {
     let type = e.nativeEvent.submitter.name;
 
     let { email, password, name } = state;
-
     if (type === "in") {
       signin(email, password);
     } else if (type === "up") {
+
       signup(email, password, name);
     }
   };
