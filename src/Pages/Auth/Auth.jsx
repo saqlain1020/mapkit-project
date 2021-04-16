@@ -1,48 +1,176 @@
-import { Grid, makeStyles } from "@material-ui/core";
+import {
+  Button,
+  Grid,
+  makeStyles,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import React from "react";
-import wallpaper from "src/Assets/authImg.jpg";
-import AuthForm from "src/Components/AuthForm/AuthForm";
+import ImageSrc from "src/Assets/Images/bg.jpg";
+import { connect } from "react-redux";
+import { signin, signup } from "src/Redux/auth/authActions";
 
 const useStyle = makeStyles((theme) => ({
   root: {
-    height: `calc(100vh - var(--navbar-height))`,
-    width:"100vw",
+    height: "calc(100vh - 60px)",
+    maxHeight: 1080,
+    background: `url(${ImageSrc})`,
+    backgroundSize: "cover",
   },
-  container1:{
-    boxShadow:"2px 2px 10px 2px rgba(0,0,0,0.4)",
-    borderRadius:"10px",
-    padding:"2em",
-  },
-  authImg:{
-    width:"100%",
-    height:"70vh",  
-    background:`url(${wallpaper}) no-repeat center / contain` , 
-    [theme.breakpoints.down('sm') ]: {
-      display: 'none',
+  container: {
+    width: "80%",
+    maxWidth: 450,
+    background: "white",
+    padding: "30px 30px",
+    boxShadow: "4px 4px 10px rgba(0,0,0,0.1)",
+    borderRadius: 20,
+    [theme.breakpoints.down("xs")]: {
+      padding: "30px 20px",
     },
   },
-  authForm: {
-    width:"60%",
-    justifySelf:"center",
-    [theme.breakpoints.up('md')]: {
-      width:"100%",
+  bottomText: {
+    color: "rgba(0,0,0,0.5)",
+    "& span": {
+      cursor: "pointer",
     },
-  }
-
+    "& span:hover": {
+      color: "rgba(0,0,0,0.7)",
+    },
+  },
+  heading: {
+    marginBottom: 20,
+    fontWeight: 600,
+  },
 }));
 
-const Auth = () => {
+const Auth = ({ signin }) => {
   const classes = useStyle();
+  const [signState, setSignState] = React.useState(false);
+  const [state, setState] = React.useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const handleInput = (e) => {
+    setState({
+      ...state,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    //in or up
+    let type = e.nativeEvent.submitter.name;
+
+    let { email, password, name } = state;
+
+    if (type === "in") {
+      signin(email, password);
+    } else if (type === "up") {
+      signup(email, password, name);
+    }
+  };
+
   return (
-    <div className={`${classes.root} center`}>
-        <Grid container  className={`center`} xs={10} >
-            <Grid className="center" item container  spacing={5 }>
-                <Grid className={classes.authImg}  item sm={6} md={5}></Grid>
-                <Grid className={`${classes.authForm}`} item  sm={6} md={5}><AuthForm/></Grid>
+    <div className={classes.root + " center"}>
+      <form className={classes.container} onSubmit={handleSubmit}>
+        <Typography variant="h2" align="center" className={classes.heading}>
+          {signState ? "Sign up" : "Sign in"}
+        </Typography>
+        <Grid container spacing={2}>
+          {signState && (
+            <Grid item xs={12}>
+              <Typography>
+                <b>Name</b>
+              </Typography>
+              <TextField
+                fullWidth
+                variant="outlined"
+                type="text"
+                placeholder="Enter Name"
+                name="name"
+                onChange={handleInput}
+                required
+              />
             </Grid>
+          )}
+          <Grid item xs={12}>
+            <Typography>
+              <b>Email</b>
+            </Typography>
+            <TextField
+              fullWidth
+              variant="outlined"
+              type="email"
+              placeholder="Enter email"
+              name="email"
+              onChange={handleInput}
+              required
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography>
+              <b>Password</b>
+            </Typography>
+            <TextField
+              fullWidth
+              variant="outlined"
+              type="password"
+              placeholder="Enter password"
+              name="password"
+              onChange={handleInput}
+              required
+            />
+          </Grid>
+          <Grid item xs={12}>
+            {signState && (
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                type="submit"
+                name="up"
+              >
+                Sign Up
+              </Button>
+            )}
+            {!signState && (
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                type="submit"
+                name="in"
+              >
+                Sign In
+              </Button>
+            )}
+          </Grid>
+          <Grid item xs={12}>
+            {!signState && (
+              <Typography className={classes.bottomText} align="center">
+                Not a member?{" "}
+                <span onClick={() => setSignState(true)}>Sign up now</span>
+              </Typography>
+            )}
+            {signState && (
+              <Typography className={classes.bottomText} align="center">
+                Already a member?{" "}
+                <span onClick={() => setSignState(false)}>Sign in now</span>
+              </Typography>
+            )}
+          </Grid>
         </Grid>
+      </form>
     </div>
   );
 };
 
-export default Auth;
+const actions = {
+  signin,
+  signup,
+};
+
+export default connect(null, actions)(Auth);

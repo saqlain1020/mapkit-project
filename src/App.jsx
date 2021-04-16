@@ -10,7 +10,7 @@ import { Container } from "@material-ui/core";
 
 function App({authListener}) {
   useEffect(() => {
-    // authListener()
+    authListener()
   }, [authListener])
   return (
     <Container maxWidth="xl" disableGutters className="App">
