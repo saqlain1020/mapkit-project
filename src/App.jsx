@@ -6,19 +6,20 @@ import Auth from "./Pages/Auth/Auth";
 import Navbar from './Components/Navbar/Navbar';
 import { authListener } from "./Redux/auth/authActions";
 import {connect} from "react-redux"
+import { Container } from "@material-ui/core";
 
 function App({authListener}) {
   useEffect(() => {
     // authListener()
   }, [authListener])
   return (
-    <div className="App">
+    <Container maxWidth="xl" disableGutters className="App">
       <Navbar/>
       <Switch>
         <Route exact path="/" component={MapPage} />
         <Route exact path="/authentication" component={Auth} />
       </Switch>
-    </div>
+    </Container>
   );
 }
 

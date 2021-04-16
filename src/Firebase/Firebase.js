@@ -4,15 +4,15 @@ import "firebase/firestore";
 import 'firebase/storage'
 // import { auth, storage } from './Firebase';
 
-var firebaseConfig = {
-//------------------------ add config here-----------------------
-apiKey: "AIzaSyBesji-DsKOmhj_KI3yAsqAuNBT9cfHVo4",
-authDomain: "mutahhirbuyfy.firebaseapp.com",
-projectId: "mutahhirbuyfy",
-storageBucket: "mutahhirbuyfy.appspot.com",
-messagingSenderId: "573838071963",
-appId: "1:573838071963:web:d5860db66f0b4f40950e3e",
-};
+const firebaseConfig = {
+    apiKey: "AIzaSyAM5mvYPVzKiqLgruPTXRIkdQMM28JXUgE",
+    authDomain: "mapkit-js.firebaseapp.com",
+    projectId: "mapkit-js",
+    storageBucket: "mapkit-js.appspot.com",
+    messagingSenderId: "298929638198",
+    appId: "1:298929638198:web:8270bfe0b1532961ab8197"
+  };
+  
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 

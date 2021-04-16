@@ -9,11 +9,12 @@
 } */
 
 :root{
-  --navbar-height: 40px
+  --navbar-height: 60px
 }
 
 .App {
   padding-top: var(--navbar-height);
+  position: relative;
 }
 
 .center{
@@ -25,4 +26,12 @@
 a, button{
   text-decoration: none;
   color: inherit;
+}
+
+h1,h2,h3{
+  font-family: 'Rajdhani', sans-serif !important;
+}
+
+p{
+  font-family: 'Roboto', sans-serif !important;
 }
