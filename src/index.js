@@ -3,17 +3,18 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./Redux/store";
 import theme from "./Theme/Theme";
 import { ThemeProvider } from "@material-ui/styles";
-import ReduxToastr from 'react-redux-toastr'
+import ReduxToastr from "react-redux-toastr";
+import history from "./history/history";
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
+      <Router history={history}>
         <ReduxToastr
           timeOut={5000}
           newestOnTop={false}
@@ -28,7 +29,7 @@ ReactDOM.render(
         <ThemeProvider theme={theme}>
           <App />
         </ThemeProvider>
-      </BrowserRouter>
+      </Router>
     </Provider>
   </React.StrictMode>,
   document.getElementById("root")

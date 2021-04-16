@@ -1,5 +1,4 @@
-import React, { Fragment } from "react";
-import "./Navbar.css";
+import React from "react";
 import { Container, makeStyles, Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
@@ -24,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
     letterSpacing: 5,
     fontWeight: 700,
     fontSize: 40,
+    cursor: "default",
   },
   text: {
     color: "white",
@@ -41,9 +41,11 @@ const Navbar = ({ auth, signout }) => {
     <div className={classes.root}>
       <Container maxWidth="lg" className={classes.container}>
         <div>
-          <Typography variant="h3" className={classes.title}>
-            MapKit
-          </Typography>
+          <Link to="/">
+            <Typography variant="h3" className={classes.title}>
+              MapKit
+            </Typography>
+          </Link>
         </div>
         <div>
           {auth ? (
