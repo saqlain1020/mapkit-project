@@ -8,6 +8,7 @@ import { authListener } from "./Redux/auth/authActions";
 import { connect } from "react-redux";
 import { Container } from "@material-ui/core";
 import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
+import 'react-perfect-scrollbar/dist/css/styles.css';
 
 function App({ authListener }) {
 

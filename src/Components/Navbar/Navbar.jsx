@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     letterSpacing: 5,
     fontWeight: 700,
-    fontSize: 40,
+    fontSize: 38,
     cursor: "default",
   },
   text: {

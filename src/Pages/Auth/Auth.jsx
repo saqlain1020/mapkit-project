@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import React from "react";
-import ImageSrc from "src/Assets/Images/bg.jpg";
+import ImageSrc from "src/Assets/Images/bg2.jpg";
 import { connect } from "react-redux";
 import { signin, signup } from "src/Redux/auth/authActions";
 
@@ -23,10 +23,12 @@ const useStyle = makeStyles((theme) => ({
     background: "white",
     padding: "30px 30px",
     boxShadow: "4px 4px 10px rgba(0,0,0,0.1)",
+    position: "relative",
     borderRadius: 20,
     [theme.breakpoints.down("xs")]: {
       padding: "30px 20px",
     },
+    
   },
   bottomText: {
     color: "rgba(0,0,0,0.5)",
