@@ -1,4 +1,4 @@
-*{
+* {
   padding: 0;
   margin: 0;
   border: 0;
@@ -8,11 +8,11 @@
   font-size: 62.5%;
 } */
 
-:root{
-  --navbar-height: 60px
+:root {
+  --navbar-height: 60px;
 }
 
-body{
+body {
   background-color: whitesmoke;
   overflow-x: hidden;
 }
@@ -22,30 +22,33 @@ body{
   position: relative;
 }
 
-.center{
+.center {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.align{
+.align {
   display: flex;
   align-items: center;
 }
 
-a, button{
+a,
+button {
   text-decoration: none;
   color: inherit;
 }
 
-h1,h2,h3{
-  font-family: 'Rajdhani', sans-serif !important;
+h1,
+h2,
+h3 {
+  font-family: "Rajdhani", sans-serif !important;
 }
 
-p{
-  font-family: 'Roboto', sans-serif !important;
+p {
+  font-family: "Roboto", sans-serif !important;
   color: "#333333";
 }
-#map{
+#map {
   width: 100%;
   margin: auto;
   height: 100% !important;

@@ -28,7 +28,6 @@ const useStyle = makeStyles((theme) => ({
     [theme.breakpoints.down("xs")]: {
       padding: "30px 20px",
     },
-    
   },
   bottomText: {
     color: "rgba(0,0,0,0.5)",
@@ -45,7 +44,7 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-const Auth = ({ signin,signup }) => {
+const Auth = ({ signin, signup }) => {
   const classes = useStyle();
   const [signState, setSignState] = React.useState(false);
   const [state, setState] = React.useState({
@@ -70,7 +69,6 @@ const Auth = ({ signin,signup }) => {
     if (type === "in") {
       signin(email, password);
     } else if (type === "up") {
-
       signup(email, password, name);
     }
   };

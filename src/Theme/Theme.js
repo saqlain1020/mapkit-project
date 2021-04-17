@@ -28,18 +28,18 @@ const theme = createMuiTheme({
     MuiOutlinedInput: {
       root: {
         background: "#F7F7F7",
-        borderRadius:5,
+        borderRadius: 5,
 
         "& fieldset": {
           borderColor: "#E6E6E6",
         },
       },
     },
-    MuiTypography:{
-        root:{
-            color: "#222",
-        }
-    }
+    MuiTypography: {
+      root: {
+        color: "#222",
+      },
+    },
   },
 });
 
