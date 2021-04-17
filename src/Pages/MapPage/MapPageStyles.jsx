@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     height: 40,
     width: 40,
     borderRadius: 5,
-    transform: "translateX(10px) translateY(10px)",
+    transform: "translateX(10px) translateY(20px)",
   },
   listText: {
     color: "wheat",

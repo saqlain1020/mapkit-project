@@ -52,4 +52,5 @@ p {
   width: 100%;
   margin: auto;
   height: 100% !important;
+  overflow: hidden;
 }

@@ -11,6 +11,7 @@
     "classnames": "^2.3.1",
     "firebase": "^8.4.1",
     "jsonwebtoken": "^8.5.1",
+    "mapkit.js": "^0.0.1",
     "react": "^17.0.2",
     "react-apple-mapkitjs": "^0.2.5",
     "react-dom": "^17.0.2",
