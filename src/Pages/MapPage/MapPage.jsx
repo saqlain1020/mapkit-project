@@ -1,6 +1,7 @@
 import {
   Button,
   Container,
+  Divider,
   Grid,
   IconButton,
   List,
@@ -136,26 +137,28 @@ const MapPage = () => {
   return (
     <div className={classes.root}>
       <PerfectScrollbar className={classNames(classes.pinContainer,open?classes.pinContainerOpen:classes.pinContainerClose)}>
-        <Typography variant="h4">
-          <b>Your Pins:</b>
+        <Typography variant="h4" className={classes.heading}>
+          <b>Your Pins</b>
         </Typography>
+        <Divider style={{background:"wheat"}}/>
         <List className={classes.list}>
           {pins.map((item, index) => (
             <ListItem button key={uuid()} onCLick={() => setSelected(item)}>
               <ListItemText
+              className={classes.listText}
                 primary={`${index + 1}. ${item.title}`}
                 secondary={`Lat: ${item.lat} Lon: ${item.lon}`}
               />
             </ListItem>
           ))}
         </List>
-        <Button fullWidth variant="outlined" color="primary" className={classes.addBtn}>
+        <Button fullWidth variant="outlined" color="secondary" className={classes.addBtn}>
           Add Pin
         </Button>
       </PerfectScrollbar>
       <div className={classNames(classes.mapContainer)}>
         <IconButton className={classes.menuBtn} onClick={()=>setOpen(!open)}>
-          <MenuIcon fontSize="large" />
+          <MenuIcon fontSize="large" style={{color:"#222"}}/>
         </IconButton>
         <AppleMaps
           longitude={30.8008}

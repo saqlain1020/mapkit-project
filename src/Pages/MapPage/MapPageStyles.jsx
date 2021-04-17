@@ -17,14 +17,17 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 20,
   },
   heading: {
-    fontWeight: 500,
+    fontWeight: 400,
+    color: "wheat",
+    fontSize:25,
+    marginBottom:5
   },
   pinContainer: {
     height: "100%",
     overflow: "hidden",
     position:"relative",
     transition: "all 300ms ease-in-out",
-    background: "white",
+    background: "rgb(32,31,35)",
     boxShadow: "-5px 0px 35px rgb(0 0 0 / 31%)",
     zIndex:1,
     overflowY:"auto",
@@ -54,5 +57,11 @@ const useStyles = makeStyles((theme) => ({
     // background: "white"
     transform:"translateX(10px) translateY(10px)"
   },
+  listText:{
+      color: "wheat",
+      "& .MuiTypography-root":{
+color: "wheat",
+      }
+  }
 }));
 export default useStyles;
