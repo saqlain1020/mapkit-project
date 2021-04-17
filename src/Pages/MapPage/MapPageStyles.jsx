@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
   pinContainerOpen: {
     width: 300,
+    minWidth:220,
     padding:16,
     left: 0,
   },
