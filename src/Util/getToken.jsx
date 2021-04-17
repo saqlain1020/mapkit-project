@@ -1,4 +1,3 @@
-// import { SignJWT } from "jose/jwt/sign";
 import jwt from "jsonwebtoken";
 
 let authKey =

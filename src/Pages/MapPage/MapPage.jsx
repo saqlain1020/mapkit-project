@@ -1,8 +1,6 @@
 import {
   Button,
-  Container,
   Divider,
-  Grid,
   IconButton,
   List,
   ListItem,
@@ -11,7 +9,7 @@ import {
 } from "@material-ui/core";
 import classNames from "classnames";
 import React from "react";
-// import { AppleMaps } from "react-apple-mapkitjs";
+import { AppleMaps } from "react-apple-mapkitjs";
 import { v4 as uuid } from "uuid";
 import useStyles from "./MapPageStyles";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -127,17 +125,16 @@ const pins = [
 ];
 
 const MapPage = () => {
-  // var map = new mapkit.Map();
   const [selected, setSelected] = React.useState({});
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   console.log(window.mapkit);
 
-  window.mapkit.init({
-    authorizationCallback: function (done) {
-      done(getToken());
-    },
-  });
+  // window.mapkit.init({
+  //   authorizationCallback: function (done) {
+  //     done(getToken());
+  //   },
+  // });
 
   return (
     <div className={classes.root}>
