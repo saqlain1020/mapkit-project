@@ -16,9 +16,11 @@ import { v4 as uuid } from "uuid";
 import useStyles from "./MapPageStyles";
 import MenuIcon from "@material-ui/icons/Menu";
 import PerfectScrollbar from 'react-perfect-scrollbar'
+import keyvar from 'src/Assets/AuthKey_NZ9MF3BC6D.p8'
+import getToken from 'src/Util/getToken'
 
 const token =
-  "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Iks2U1VZNjI1RjcifQ.eyJpYXQiOjE1NjAyOTIxNTMuMTYxLCJpc3MiOiJVNEE0WEY3UVJQIn0.mPSIqDGn9hUUByrg7EGo9mZ0nkfOj4Zade0yoJOhdcggGfqT-mXyJ-cMimS8Fy2DBsLsyS4m18ILKigMHLtsyA";
+keyvar
 
 const pins = [
   {
@@ -143,7 +145,7 @@ const MapPage = () => {
         <Divider style={{background:"wheat"}}/>
         <List className={classes.list}>
           {pins.map((item, index) => (
-            <ListItem button key={uuid()} onCLick={() => setSelected(item)}>
+            <ListItem button key={uuid()} onClick={() => setSelected(item)}>
               <ListItemText
               className={classes.listText}
                 primary={`${index + 1}. ${item.title}`}
@@ -167,7 +169,7 @@ const MapPage = () => {
           //from id map css
           // height='500px'
           // width='100%'
-          token={token}
+          token={getToken()}
         />
       </div>
       {/* <Typography variant="h2" className={classes.heading}>
