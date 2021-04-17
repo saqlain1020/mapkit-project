@@ -128,13 +128,15 @@ const MapPage = () => {
   const [selected, setSelected] = React.useState({});
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  console.log(window.mapkit);
 
-  // window.mapkit.init({
-  //   authorizationCallback: function (done) {
-  //     done(getToken());
-  //   },
-  // });
+  const [t, setT] = React.useState(null);
+
+  React.useState(() => {
+    const fn = async () => {
+      setT(await getToken());
+    };
+    fn();
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -172,16 +174,17 @@ const MapPage = () => {
         <IconButton className={classes.menuBtn} onClick={() => setOpen(!open)}>
           <MenuIcon fontSize="large" style={{ color: "#222" }} />
         </IconButton>
-
-        <AppleMaps
-          longitude={30.8008}
-          latitude={-1.5491}
-          zoomLevel={1}
-          //from id map css
-          // height='500px'
-          // width='100%'
-          token={getToken()}
-        />
+        {t && (
+          <AppleMaps
+            longitude={30.8008}
+            latitude={-1.5491}
+            zoomLevel={1}
+            //from id map css
+            // height='500px'
+            // width='100%'
+            token={t}
+          />
+        )}
       </div>
     </div>
   );

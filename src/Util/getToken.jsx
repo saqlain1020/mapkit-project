@@ -25,7 +25,7 @@ const fn = async () => {
 
   console.log(res);
   return res;
-  // return "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5aOU1GM0JDNkQifQ.eyJpc3MiOiJTMjUyTDVDMjQ3IiwiaWF0IjoxNjE4NjcwMTk1LCJleHAiOjE2NTM0ODkzOTV9.uVsCpjMMUXQw-Ax_n3T8p0eAmjmTt91kpOGRnfth5_dIO5rkAplXKuB0v_cuv4LPg5v4sHTVNWpOun2L7VCzrw"
+  // return "eyJhbGciOiJFUzI1NiIsImtpZCI6Ik5UTjY3NFVRM1AiLCJ0eXAiOiJKV1QifQ.eyJhbGciOiJFUzI1NiIsImlzcyI6IjJaN0Y0UDQ5MjUiLCJpYXQiOjE2MTg2Nzg4NTgsImV4cCI6MTYxODY4MDY1OH0.MEUCIG3l+Bvb6QNdVoqWoweMIruuCa9vcVhg4Iew/UGPFiqlAiEA8tkiGmxXSlf7QLqBcw6FpqfHFdJjKweMkv2BpRiXxJk="
 };
 
 export default fn;
