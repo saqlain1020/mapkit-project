@@ -22,7 +22,7 @@ import AddPinDIalog from "src/Components/AddPinDialog/AddPinDIalog";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CancelIcon from "@material-ui/icons/Cancel";
 import { connect } from "react-redux";
-import { getApiPins, setAllPins } from "src/Redux/pins/pinsActions";
+import { setAllPins, sendApiPin } from "src/Redux/pins/pinsActions";
 
 // const pins = [
 //   {
@@ -217,8 +217,10 @@ const MapPage = ({ pins, setAllPins }) => {
     setSlide(false);
   };
 
+  // sendPin to db
   const savePin = () => {
-    // sendPin to db
+    let pin = pins[pins.length - 1];
+    sendApiPin(pin);
     setSlide(false);
   };
 
@@ -275,7 +277,7 @@ const MapPage = ({ pins, setAllPins }) => {
           <IconButton onClick={cancelPin}>
             <CancelIcon fontSize="large" style={{ color: "red" }} />
           </IconButton>
-          <IconButton>
+          <IconButton onClick={savePin}>
             <CheckCircleIcon fontSize="large" style={{ color: "green" }} />
           </IconButton>
         </Paper>
@@ -296,6 +298,7 @@ const mapState = (store) => ({
 const actions = {
   // getApiPins,
   setAllPins,
+  sendApiPin,
 };
 
 export default connect(mapState, actions)(MapPage);
