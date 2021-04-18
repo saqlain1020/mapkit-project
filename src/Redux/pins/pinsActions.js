@@ -1,6 +1,6 @@
 import { toastr } from "react-redux-toastr";
 import { firestore } from "src/Firebase/Firebase";
-import { SET_ALL_PINS,CLEAN_ALL_PINS } from "./pinsConstants";
+import { SET_ALL_PINS, CLEAN_ALL_PINS } from "./pinsConstants";
 import store from "./../store";
 
 /////////////////Store Management////////////
@@ -10,9 +10,9 @@ export const setAllPins = (allPins) => ({
   payload: allPins,
 });
 
-export const cleanPins = ()=>({
+export const cleanPins = () => ({
   type: CLEAN_ALL_PINS,
-})
+});
 
 ////////////////////API CALLLS//////////////////
 
@@ -50,6 +50,26 @@ export const sendApiPin = async (pin) => {
     } else {
       toastr.error("Auth", "Please login to save pins.");
     }
+  } catch (error) {
+    toastr.error("Error", error.message);
+  }
+};
+
+export const deletePin = (id) => async (dispatch) => {
+  try {
+    let uid = store.getState().auth?.uid;
+    await firestore
+      .collection("users")
+      .doc(uid)
+      .collection("pins")
+      .doc(id)
+      .delete();
+
+    let allPins = store.getState().pins.allPins;
+    allPins = allPins.filter((item) => item.id !== id);
+    dispatch(setAllPins([...allPins]));
+
+    toastr.success("Done", "Pin deleted.");
   } catch (error) {
     toastr.error("Error", error.message);
   }

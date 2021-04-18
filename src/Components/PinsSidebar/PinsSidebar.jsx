@@ -3,8 +3,6 @@ import {
   Button,
   Divider,
   List,
-  ListItem,
-  ListItemText,
   Typography,
   makeStyles,
 } from "@material-ui/core";
@@ -12,11 +10,6 @@ import { connect } from "react-redux";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import classNames from "classnames";
 import { v4 as uuid } from "uuid";
-import {
-  ContextMenu,
-  MenuItem as ContextMenuItem,
-  ContextMenuTrigger,
-} from "react-contextmenu";
 import PinListItem from "../PinListItem/PinListItem";
 
 const useStyles = makeStyles((theme) => ({

@@ -1,11 +1,12 @@
 import React from "react";
 import { ListItem, ListItemText, makeStyles } from "@material-ui/core";
-import { v4 as uuid } from "uuid";
+import { deletePin } from "./../../Redux/pins/pinsActions";
 import {
   ContextMenu,
   MenuItem as ContextMenuItem,
   ContextMenuTrigger,
 } from "react-contextmenu";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   listText: {
@@ -14,17 +15,16 @@ const useStyles = makeStyles((theme) => ({
       color: "wheat",
     },
   },
-  contextMenu:{
-      background: "white",
-      padding:"5px 10px",
-      
+  contextMenu: {
+    background: "white",
+    padding: "5px 10px",
   },
-  contextItem:{
-      cursor:"pointer"
-  }
+  contextItem: {
+    cursor: "pointer",
+  },
 }));
 
-const PinListItem = ({ handleClick, item, index }) => {
+const PinListItem = ({ handleClick, item, index, deletePin }) => {
   const classes = useStyles();
   return (
     <>
@@ -38,10 +38,19 @@ const PinListItem = ({ handleClick, item, index }) => {
         </ListItem>
       </ContextMenuTrigger>
       <ContextMenu id={`${item.id}`} className={classes.contextMenu}>
-        <ContextMenuItem className={classes.contextItem}>Delete</ContextMenuItem>
+        <ContextMenuItem
+          className={classes.contextItem}
+          onClick={() => deletePin(item.id)}
+        >
+          Delete
+        </ContextMenuItem>
       </ContextMenu>
     </>
   );
 };
 
-export default PinListItem;
+const actions = {
+  deletePin,
+};
+
+export default connect(null, actions)(PinListItem);
