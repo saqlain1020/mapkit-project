@@ -5,20 +5,27 @@ import {
   List,
   ListItem,
   ListItemText,
+  Paper,
   Typography,
+  Slide,
 } from "@material-ui/core";
 import classNames from "classnames";
 import React from "react";
 import { AppleMaps, Annotation } from "react-apple-mapkitjs";
-import { v4 as uuid } from "uuid";
 import useStyles from "./MapPageStyles";
 import MenuIcon from "@material-ui/icons/Menu";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import getToken from "src/Util/getToken";
 import mapkit from "mapkit.js";
+import { v4 as uuid } from "uuid";
+import AddPinDIalog from "src/Components/AddPinDialog/AddPinDIalog";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import CancelIcon from "@material-ui/icons/Cancel";
+
 
 const pins = [
   {
+    id: uuid(),
     title: "Apple Park Visitor Center",
     subtitle: "10600 North Tantau Avenue, Cupertino, CA 95014",
     glyphText: "",
@@ -30,6 +37,7 @@ const pins = [
     },
   },
   {
+    id: uuid(),
     title: "Apple Park Visitor Center",
     subtitle: "10600 North Tantau Avenue, Cupertino, CA 95014",
     glyphText: "",
@@ -41,6 +49,7 @@ const pins = [
     },
   },
   {
+    id: uuid(),
     title: "Apple Park Visitor Center",
     subtitle: "10600 North Tantau Avenue, Cupertino, CA 95014",
     glyphText: "",
@@ -52,6 +61,7 @@ const pins = [
     },
   },
   {
+    id: uuid(),
     title: "Apple Park Visitor Center",
     subtitle: "10600 North Tantau Avenue, Cupertino, CA 95014",
     glyphText: "",
@@ -63,22 +73,31 @@ const pins = [
     },
   },
 ];
+let span = new mapkit.CoordinateSpan(0.0125, 0.0125);
+
+let regionStart = new mapkit.CoordinateRegion(
+  new mapkit.Coordinate(
+    pins[0] ? pins[0].location.latitude : 37.3327,
+    pins[0] ? pins[0].location.longitude : -122.0053
+  ),
+  span
+);
+
+var mapRef;
 
 const MapPage = () => {
-  const [selected, setSelected] = React.useState({});
+  const [allAnnos, setAllAnnos] = React.useState(pins);
+  const [dialog, setDialog] = React.useState(false);
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const mapDivRef = React.createRef(null);
-  const mapRef = React.createRef(null);
+  const mapDivRef = React.createRef();
+  
+  const [region, setRegion] = React.useState(regionStart);
+  const [slide,setSlide] = React.useState(false);
 
-  const center = new mapkit.Coordinate(
-      pins[0] ? pins[0].location.latitude : 37.3327,
-      pins[0] ? pins[0].location.longitude : -122.0053
-    ),
-    span = new mapkit.CoordinateSpan(0.0125, 0.0125),
-    region = new mapkit.CoordinateRegion(center, span);
-
-  console.log(center);
+  React.useEffect(() => {
+    renderMap();
+  }, [allAnnos]);
 
   mapkit.init({
     authorizationCallback: async (done) => {
@@ -86,26 +105,31 @@ const MapPage = () => {
     },
   });
 
+  const changeRegion = ({ latitude, longitude }) => {
+    let reg = new mapkit.CoordinateRegion(
+      new mapkit.Coordinate(latitude, longitude),
+      new mapkit.CoordinateSpan(0.0125, 0.0125)
+    );
+    setRegion(reg);
+  };
+
   const initAnnotations = () => {
-    pins.forEach((item, index) => {
-      addAnnotation(item, index);
+    console.log(allAnnos);
+    allAnnos.forEach((item) => {
+      addAnnotation(item);
     });
   };
 
-  const callback = (e) => {
-    console.log(e);
-  };
-
-  const addAnnotation = (
-    {
-      title,
-      subtitle,
-      glyphText = "",
-      color = "#2ecc71",
-      location: { latitude, longitude },
-    },
-    index
-  ) => {
+  const addAnnotation = ({
+    title,
+    subtitle,
+    glyphText = "",
+    color = "#2ecc71",
+    location: { latitude, longitude },
+    selected = false,
+    draggable = false,
+    id,
+  }) => {
     const annotation = new mapkit.MarkerAnnotation(
       new mapkit.Coordinate(latitude, longitude),
       {
@@ -113,17 +137,19 @@ const MapPage = () => {
         subtitle,
         glyphText,
         color,
-        draggable: true,
+        draggable,
+        selected,
         data: {
-          index,
+          id,
         },
       }
     );
-    mapRef.current.addAnnotation(annotation);
+    mapRef.addAnnotation(annotation);
   };
 
-  React.useEffect(() => {
+  const renderMap = () => {
     if (mapDivRef.current) {
+      document.querySelector("#map").innerHTML = "";
       var map = new mapkit.Map("map", {
         region: region,
         showsCompass: mapkit.FeatureVisibility.Visible,
@@ -132,13 +158,71 @@ const MapPage = () => {
         isRotationEnabled: true,
         showsScale: mapkit.FeatureVisibility.Visible,
       });
-      mapRef.current = map;
+      console.log(map);
+      mapRef = map;
       initAnnotations();
       console.log(map.annotations);
     }
-  }, [mapDivRef]);
+  };
 
-  console.log(mapkit.FeatureVisibility);
+  React.useEffect(() => {
+    let int = setInterval(() => {
+      if (mapDivRef.current) {
+        renderMap();
+        clearInterval(int);
+      }
+    }, 300);
+  }, []);
+
+  //Add pin menu btn after entry
+  const addPin = ({ title, subtitle, glyphText, color }) => {
+    console.log(mapRef);
+    let { latitude, longitude } = mapRef.center;
+    let obj = {
+      id: uuid(),
+      title,
+      subtitle,
+      glyphText,
+      color,
+      draggable: true,
+      selected: true,
+      location: {
+        latitude: latitude + 1,
+        longitude: longitude + 1,
+      },
+    };
+    setAllAnnos([...allAnnos, obj]);
+    changeRegion(obj.location);
+    setSlide(true);
+  };
+
+  //List menu click
+  const listItemClick = (id) => {
+    let anno = allAnnos.map((item) => {
+      console.log(item);
+      if (item.id === id) {
+        changeRegion(item.location);
+        item.selected = true;
+        return item;
+      } else {
+        item.selected = false;
+        return item;
+      }
+    });
+    setAllAnnos(anno);
+  };
+
+  const cancelPin= ()=>{
+    let anno = allAnnos
+    anno.pop();
+    setAllAnnos([...anno]);
+    setSlide(false);
+  }
+
+  const savePin = ()=>{
+    // sendPin to db
+    setSlide(true);
+  }
 
   return (
     <div className={classes.root}>
@@ -152,9 +236,23 @@ const MapPage = () => {
           <b>Your Pins</b>
         </Typography>
         <Divider style={{ background: "wheat" }} />
+        <Button
+          fullWidth
+          variant="outlined"
+          color="secondary"
+          className={classes.addBtn}
+          onClick={() => setDialog(true)}
+        >
+          Add Pin
+        </Button>
+        <Divider style={{ background: "wheat" }} />
         <List className={classes.list}>
-          {pins.map((item, index) => (
-            <ListItem button key={uuid()} onClick={() => setSelected(item)}>
+          {allAnnos.map((item, index) => (
+            <ListItem
+              button
+              key={uuid()}
+              onClick={() => listItemClick(item.id)}
+            >
               <ListItemText
                 className={classes.listText}
                 primary={`${index + 1}. ${item.title}`}
@@ -163,49 +261,28 @@ const MapPage = () => {
             </ListItem>
           ))}
         </List>
-        <Button
-          fullWidth
-          variant="outlined"
-          color="secondary"
-          className={classes.addBtn}
-        >
-          Add Pin
-        </Button>
       </PerfectScrollbar>
       <div className={classNames(classes.mapContainer)}>
         <IconButton className={classes.menuBtn} onClick={() => setOpen(!open)}>
           <MenuIcon fontSize="large" style={{ color: "#222" }} />
         </IconButton>
         <div id="map" ref={mapDivRef}></div>
-        {/* {t && (
-          <AppleMaps
-            longitude={30.8008}
-            latitude={-1.5491}
-            zoomLevel={4}
-            ref={ano1Ref}
-            token={t}
-          >
-            <Annotation
-              longitude={30.8008}
-              latitude={-1.5491}
-              color="#969696"
-              title="Apple"
-              subtitle="work"
-              selected={true}
-              glyphText=""
-              // ref={}
-            />
-            <Annotation
-              longitude={35.8008}
-              latitude={-1.5491}
-              color="#349576"
-              title="New Annotation"
-              subtitle="work"
-              selected={false}              
-            />
-          </AppleMaps> */}
-        {/* )} */}
+        
+        <Paper className={classNames(classes.prompt,slide?classes.paperUp:classes.paperDown)}>
+          <IconButton onClick={cancelPin}>
+            <CancelIcon fontSize="large" style={{ color: "red" }} />
+          </IconButton>
+          <IconButton>
+            <CheckCircleIcon fontSize="large" style={{ color: "green" }} />
+          </IconButton>        
+        </Paper>
+        
       </div>
+      <AddPinDIalog
+        open={dialog}
+        onClose={() => setDialog(false)}
+        callback={addPin}
+      />
     </div>
   );
 };

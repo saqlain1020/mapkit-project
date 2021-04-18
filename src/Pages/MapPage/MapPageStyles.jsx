@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
   addBtn: {
     marginTop: 20,
+    marginBottom:20,
   },
   heading: {
     fontWeight: 400,
@@ -59,5 +60,24 @@ const useStyles = makeStyles((theme) => ({
       color: "wheat",
     },
   },
+  prompt:{
+    width: "120px",
+    height:60,
+    display:"flex",
+    justifyContent:"space-evenly",
+    position:"absolute",
+    top:"calc(100% - 60px)",
+    left:"calc(50% - 60px)",
+    transition: "transform 300ms ease-in-out",
+    "& .MuiIconButton-root":{
+      padding:0,
+    }
+  },
+  paperUp:{
+    transform: "scale(1)",    
+  },
+  paperDown:{
+    transform: "scale(0)",    
+  }
 }));
 export default useStyles;
