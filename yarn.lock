@@ -9784,11 +9784,6 @@ react-app-polyfill@^2.0.0:
     regenerator-runtime "^0.13.7"
     whatwg-fetch "^3.4.1"
 
-react-apple-mapkitjs@^0.2.5:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/react-apple-mapkitjs/-/react-apple-mapkitjs-0.2.5.tgz#c7d1340e73a69adb0c15aae5baa9456c34c5ef16"
-  integrity sha512-aZs1aB5mL3UnKkvnQZ7Z1s3cN2WbxhPqogje2zFpoP109jm8BiUXnzfrnqcY65MO1V9y26XGITYeyUKRA3XOrA==
-
 react-dev-utils@^11.0.3:
   version "11.0.4"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-11.0.4.tgz#a7ccb60257a1ca2e0efe7a83e38e6700d17aa37a"

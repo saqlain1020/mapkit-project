@@ -1,79 +1,17 @@
-import {
-  Button,
-  Divider,
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  Paper,
-  Typography,
-  Slide,
-} from "@material-ui/core";
+import { IconButton } from "@material-ui/core";
 import classNames from "classnames";
 import React from "react";
-import { AppleMaps, Annotation } from "react-apple-mapkitjs";
 import useStyles from "./MapPageStyles";
 import MenuIcon from "@material-ui/icons/Menu";
-import PerfectScrollbar from "react-perfect-scrollbar";
 import getToken from "src/Util/getToken";
 import mapkit from "mapkit.js";
 import { v4 as uuid } from "uuid";
 import AddPinDIalog from "src/Components/AddPinDialog/AddPinDIalog";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import CancelIcon from "@material-ui/icons/Cancel";
 import { connect } from "react-redux";
 import { setAllPins, sendApiPin } from "src/Redux/pins/pinsActions";
+import MapPinConfirmation from "src/Components/MapPinConfirmation/MapPinConfirmation";
+import PinsSidebar from "src/Components/PinsSidebar/PinsSidebar";
 
-// const pins = [
-//   {
-//     id: uuid(),
-//     title: "Apple Park Visitor Center",
-//     subtitle: "10600 North Tantau Avenue, Cupertino, CA 95014",
-//     glyphText: "",
-//     color: "#2ecc71",
-//     displayPriority: 1000,
-//     location: {
-//       latitude: 37.3327,
-//       longitude: -122.0053,
-//     },
-//   },
-//   {
-//     id: uuid(),
-//     title: "Apple Park Visitor Center",
-//     subtitle: "10600 North Tantau Avenue, Cupertino, CA 95014",
-//     glyphText: "",
-//     color: "#2ecc71",
-//     displayPriority: 1000,
-//     location: {
-//       latitude: 34.3327,
-//       longitude: -122.0053,
-//     },
-//   },
-//   {
-//     id: uuid(),
-//     title: "Apple Park Visitor Center",
-//     subtitle: "10600 North Tantau Avenue, Cupertino, CA 95014",
-//     glyphText: "",
-//     color: "#2ecc71",
-//     displayPriority: 1000,
-//     location: {
-//       latitude: 38.3327,
-//       longitude: -120.0053,
-//     },
-//   },
-//   {
-//     id: uuid(),
-//     title: "Apple Park Visitor Center",
-//     subtitle: "10600 North Tantau Avenue, Cupertino, CA 95014",
-//     glyphText: "",
-//     color: "#2ecc71",
-//     displayPriority: 1000,
-//     location: {
-//       latitude: 34.3327,
-//       longitude: -112.0053,
-//     },
-//   },
-// ];
 let span = new mapkit.CoordinateSpan(0.0125, 0.0125);
 
 let regionStart = new mapkit.CoordinateRegion(
@@ -88,20 +26,22 @@ const MapPage = ({ pins, setAllPins }) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const mapDivRef = React.createRef();
-
   const [region, setRegion] = React.useState(regionStart);
   const [slide, setSlide] = React.useState(false);
 
+  //Render map wheneven new pins update
   React.useEffect(() => {
     renderMap();
   }, [pins]);
 
+  //initialize mapkit
   mapkit.init({
     authorizationCallback: async (done) => {
       done(await getToken());
     },
   });
 
+  //change center of map
   const changeRegion = ({ latitude, longitude }) => {
     let reg = new mapkit.CoordinateRegion(
       new mapkit.Coordinate(latitude, longitude),
@@ -110,13 +50,14 @@ const MapPage = ({ pins, setAllPins }) => {
     setRegion(reg);
   };
 
+  //add all initial pins on map
   const initAnnotations = () => {
-    console.log(pins);
     pins.forEach((item) => {
       addAnnotation(item);
     });
   };
 
+  //Add new pin on map
   const addAnnotation = ({
     title,
     subtitle,
@@ -144,6 +85,7 @@ const MapPage = ({ pins, setAllPins }) => {
     mapRef.addAnnotation(annotation);
   };
 
+  //render map with new pins
   const renderMap = () => {
     if (mapDivRef.current) {
       document.querySelector("#map").innerHTML = "";
@@ -155,10 +97,8 @@ const MapPage = ({ pins, setAllPins }) => {
         isRotationEnabled: true,
         showsScale: mapkit.FeatureVisibility.Visible,
       });
-      console.log(map);
       mapRef = map;
       initAnnotations();
-      console.log(map.annotations);
     }
   };
 
@@ -226,61 +166,18 @@ const MapPage = ({ pins, setAllPins }) => {
 
   return (
     <div className={classes.root}>
-      <PerfectScrollbar
-        className={classNames(
-          classes.pinContainer,
-          open ? classes.pinContainerOpen : classes.pinContainerClose
-        )}
-      >
-        <Typography variant="h4" className={classes.heading}>
-          <b>Your Pins</b>
-        </Typography>
-        <Divider style={{ background: "wheat" }} />
-        <Button
-          fullWidth
-          variant="outlined"
-          color="secondary"
-          className={classes.addBtn}
-          onClick={() => setDialog(true)}
-        >
-          Add Pin
-        </Button>
-        <Divider style={{ background: "wheat" }} />
-        <List className={classes.list}>
-          {pins.map((item, index) => (
-            <ListItem
-              button
-              key={uuid()}
-              onClick={() => listItemClick(item.id)}
-            >
-              <ListItemText
-                className={classes.listText}
-                primary={`${index + 1}. ${item.title}`}
-                secondary={`Lat: ${item.location.latitude} Lon: ${item.location.longitude}`}
-              />
-            </ListItem>
-          ))}
-        </List>
-      </PerfectScrollbar>
+      <PinsSidebar
+        setDialog={setDialog}
+        listItemClick={listItemClick}
+        open={open}
+      />
       <div className={classNames(classes.mapContainer)}>
         <IconButton className={classes.menuBtn} onClick={() => setOpen(!open)}>
           <MenuIcon fontSize="large" style={{ color: "#222" }} />
         </IconButton>
         <div id="map" ref={mapDivRef}></div>
 
-        <Paper
-          className={classNames(
-            classes.prompt,
-            slide ? classes.paperUp : classes.paperDown
-          )}
-        >
-          <IconButton onClick={cancelPin}>
-            <CancelIcon fontSize="large" style={{ color: "red" }} />
-          </IconButton>
-          <IconButton onClick={savePin}>
-            <CheckCircleIcon fontSize="large" style={{ color: "green" }} />
-          </IconButton>
-        </Paper>
+        <MapPinConfirmation cancel={cancelPin} save={savePin} open={slide} />
       </div>
       <AddPinDIalog
         open={dialog}
