@@ -2,19 +2,20 @@ import { toastr } from "react-redux-toastr";
 import { auth, firestore, serverTimestamp } from "src/Firebase/Firebase";
 import history from "src/history/history";
 import { REMOVE_USER, SET_USER } from "./authConstants";
+import { cleanPins, getApiPins } from 'src/Redux/pins/pinsActions';
 
-export var setUser = (user) => ({
+export const setUser = (user) => ({
   type: SET_USER,
   payload: {
     user,
   },
 });
 
-export var removeUser = (user) => ({
+export const removeUser = () => ({
   type: REMOVE_USER,
 });
 
-export var signup = (email, password, name) => async (dispatch) => {
+export const signup = (email, password, name) => async (dispatch) => {
   try {
     var {
       user: { uid },
@@ -35,7 +36,7 @@ export var signup = (email, password, name) => async (dispatch) => {
   }
 };
 
-export var signin = (email, password) => async (dispatch) => {
+export const signin = (email, password) => async (dispatch) => {
   try {
     await auth.signInWithEmailAndPassword(email, password);
     toastr.success("Sign in Complete");
@@ -46,7 +47,7 @@ export var signin = (email, password) => async (dispatch) => {
   }
 };
 
-export var signout = () => async (dispatch) => {
+export const signout = () => async (dispatch) => {
   try {
     await auth.signOut();
     toastr.success("Signed Out...");
@@ -56,7 +57,7 @@ export var signout = () => async (dispatch) => {
   }
 };
 
-export var authListener = () => async (dispatch) => {
+export const authListener = () => async (dispatch) => {
   try {
     auth.onAuthStateChanged(async (user) => {
       if (user) {
@@ -71,8 +72,10 @@ export var authListener = () => async (dispatch) => {
           uid,
         };
         dispatch(setUser(userData));
+        dispatch(getApiPins())
       } else {
-        dispatch(removeUser(userData));
+        dispatch(removeUser());
+        dispatch(cleanPins())
       }
     });
   } catch (error) {

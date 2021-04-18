@@ -21,83 +21,80 @@ import { v4 as uuid } from "uuid";
 import AddPinDIalog from "src/Components/AddPinDialog/AddPinDIalog";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CancelIcon from "@material-ui/icons/Cancel";
+import { connect } from "react-redux";
+import { getApiPins, setAllPins } from "src/Redux/pins/pinsActions";
 
-
-const pins = [
-  {
-    id: uuid(),
-    title: "Apple Park Visitor Center",
-    subtitle: "10600 North Tantau Avenue, Cupertino, CA 95014",
-    glyphText: "",
-    color: "#2ecc71",
-    displayPriority: 1000,
-    location: {
-      latitude: 37.3327,
-      longitude: -122.0053,
-    },
-  },
-  {
-    id: uuid(),
-    title: "Apple Park Visitor Center",
-    subtitle: "10600 North Tantau Avenue, Cupertino, CA 95014",
-    glyphText: "",
-    color: "#2ecc71",
-    displayPriority: 1000,
-    location: {
-      latitude: 34.3327,
-      longitude: -122.0053,
-    },
-  },
-  {
-    id: uuid(),
-    title: "Apple Park Visitor Center",
-    subtitle: "10600 North Tantau Avenue, Cupertino, CA 95014",
-    glyphText: "",
-    color: "#2ecc71",
-    displayPriority: 1000,
-    location: {
-      latitude: 38.3327,
-      longitude: -120.0053,
-    },
-  },
-  {
-    id: uuid(),
-    title: "Apple Park Visitor Center",
-    subtitle: "10600 North Tantau Avenue, Cupertino, CA 95014",
-    glyphText: "",
-    color: "#2ecc71",
-    displayPriority: 1000,
-    location: {
-      latitude: 34.3327,
-      longitude: -112.0053,
-    },
-  },
-];
+// const pins = [
+//   {
+//     id: uuid(),
+//     title: "Apple Park Visitor Center",
+//     subtitle: "10600 North Tantau Avenue, Cupertino, CA 95014",
+//     glyphText: "",
+//     color: "#2ecc71",
+//     displayPriority: 1000,
+//     location: {
+//       latitude: 37.3327,
+//       longitude: -122.0053,
+//     },
+//   },
+//   {
+//     id: uuid(),
+//     title: "Apple Park Visitor Center",
+//     subtitle: "10600 North Tantau Avenue, Cupertino, CA 95014",
+//     glyphText: "",
+//     color: "#2ecc71",
+//     displayPriority: 1000,
+//     location: {
+//       latitude: 34.3327,
+//       longitude: -122.0053,
+//     },
+//   },
+//   {
+//     id: uuid(),
+//     title: "Apple Park Visitor Center",
+//     subtitle: "10600 North Tantau Avenue, Cupertino, CA 95014",
+//     glyphText: "",
+//     color: "#2ecc71",
+//     displayPriority: 1000,
+//     location: {
+//       latitude: 38.3327,
+//       longitude: -120.0053,
+//     },
+//   },
+//   {
+//     id: uuid(),
+//     title: "Apple Park Visitor Center",
+//     subtitle: "10600 North Tantau Avenue, Cupertino, CA 95014",
+//     glyphText: "",
+//     color: "#2ecc71",
+//     displayPriority: 1000,
+//     location: {
+//       latitude: 34.3327,
+//       longitude: -112.0053,
+//     },
+//   },
+// ];
 let span = new mapkit.CoordinateSpan(0.0125, 0.0125);
 
 let regionStart = new mapkit.CoordinateRegion(
-  new mapkit.Coordinate(
-    pins[0] ? pins[0].location.latitude : 37.3327,
-    pins[0] ? pins[0].location.longitude : -122.0053
-  ),
+  new mapkit.Coordinate(37.3327, -122.0053),
   span
 );
 
 var mapRef;
 
-const MapPage = () => {
-  const [allAnnos, setAllAnnos] = React.useState(pins);
+const MapPage = ({ pins, setAllPins }) => {
   const [dialog, setDialog] = React.useState(false);
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const mapDivRef = React.createRef();
-  
+
   const [region, setRegion] = React.useState(regionStart);
-  const [slide,setSlide] = React.useState(false);
+  const [slide, setSlide] = React.useState(false);
 
   React.useEffect(() => {
     renderMap();
-  }, [allAnnos]);
+  }, [pins]);
 
   mapkit.init({
     authorizationCallback: async (done) => {
@@ -114,8 +111,8 @@ const MapPage = () => {
   };
 
   const initAnnotations = () => {
-    console.log(allAnnos);
-    allAnnos.forEach((item) => {
+    console.log(pins);
+    pins.forEach((item) => {
       addAnnotation(item);
     });
   };
@@ -166,6 +163,7 @@ const MapPage = () => {
   };
 
   React.useEffect(() => {
+    // getApiPins();
     let int = setInterval(() => {
       if (mapDivRef.current) {
         renderMap();
@@ -191,14 +189,14 @@ const MapPage = () => {
         longitude: longitude + 1,
       },
     };
-    setAllAnnos([...allAnnos, obj]);
+    setAllPins([...pins, obj]);
     changeRegion(obj.location);
     setSlide(true);
   };
 
   //List menu click
   const listItemClick = (id) => {
-    let anno = allAnnos.map((item) => {
+    let anno = pins.map((item) => {
       console.log(item);
       if (item.id === id) {
         changeRegion(item.location);
@@ -209,20 +207,20 @@ const MapPage = () => {
         return item;
       }
     });
-    setAllAnnos(anno);
+    setAllPins(anno);
   };
 
-  const cancelPin= ()=>{
-    let anno = allAnnos
+  const cancelPin = () => {
+    let anno = pins;
     anno.pop();
-    setAllAnnos([...anno]);
+    setAllPins([...anno]);
     setSlide(false);
-  }
+  };
 
-  const savePin = ()=>{
+  const savePin = () => {
     // sendPin to db
-    setSlide(true);
-  }
+    setSlide(false);
+  };
 
   return (
     <div className={classes.root}>
@@ -247,7 +245,7 @@ const MapPage = () => {
         </Button>
         <Divider style={{ background: "wheat" }} />
         <List className={classes.list}>
-          {allAnnos.map((item, index) => (
+          {pins.map((item, index) => (
             <ListItem
               button
               key={uuid()}
@@ -267,16 +265,20 @@ const MapPage = () => {
           <MenuIcon fontSize="large" style={{ color: "#222" }} />
         </IconButton>
         <div id="map" ref={mapDivRef}></div>
-        
-        <Paper className={classNames(classes.prompt,slide?classes.paperUp:classes.paperDown)}>
+
+        <Paper
+          className={classNames(
+            classes.prompt,
+            slide ? classes.paperUp : classes.paperDown
+          )}
+        >
           <IconButton onClick={cancelPin}>
             <CancelIcon fontSize="large" style={{ color: "red" }} />
           </IconButton>
           <IconButton>
             <CheckCircleIcon fontSize="large" style={{ color: "green" }} />
-          </IconButton>        
+          </IconButton>
         </Paper>
-        
       </div>
       <AddPinDIalog
         open={dialog}
@@ -287,4 +289,13 @@ const MapPage = () => {
   );
 };
 
-export default MapPage;
+const mapState = (store) => ({
+  pins: store.pins.allPins,
+});
+
+const actions = {
+  // getApiPins,
+  setAllPins,
+};
+
+export default connect(mapState, actions)(MapPage);
