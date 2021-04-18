@@ -60,11 +60,15 @@ const Auth = ({ signin, signup }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e, v) => {
     e.preventDefault();
     //in or up
-    let type = e.nativeEvent.submitter.name;
-
+    let type = "in";
+    e.target.childNodes[1].childNodes.forEach((item) => {
+      if (item.childNodes[0].type === "submit") {
+        type = item.childNodes[0].name;
+      }
+    });
     let { email, password, name } = state;
     if (type === "in") {
       signin(email, password);
@@ -143,6 +147,7 @@ const Auth = ({ signin, signup }) => {
                 color="primary"
                 type="submit"
                 name="in"
+                data={{ foo: "bar" }}
               >
                 Sign In
               </Button>

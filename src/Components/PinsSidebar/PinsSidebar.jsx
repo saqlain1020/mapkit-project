@@ -12,6 +12,12 @@ import { connect } from "react-redux";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import classNames from "classnames";
 import { v4 as uuid } from "uuid";
+import {
+  ContextMenu,
+  MenuItem as ContextMenuItem,
+  ContextMenuTrigger,
+} from "react-contextmenu";
+import PinListItem from "../PinListItem/PinListItem";
 
 const useStyles = makeStyles((theme) => ({
   pinContainer: {
@@ -35,12 +41,7 @@ const useStyles = makeStyles((theme) => ({
     left: -300,
     padding: 0,
   },
-  listText: {
-    color: "wheat",
-    "& .MuiTypography-root": {
-      color: "wheat",
-    },
-  },
+
   list: {
     overflowY: "auto",
   },
@@ -82,13 +83,12 @@ const PinsSidebar = ({ setDialog, listItemClick, open, pins }) => {
       <Divider style={{ background: "wheat" }} />
       <List className={classes.list}>
         {pins.map((item, index) => (
-          <ListItem button key={uuid()} onClick={() => listItemClick(item.id)}>
-            <ListItemText
-              className={classes.listText}
-              primary={`${index + 1}. ${item.title}`}
-              secondary={`Lat: ${item.location.latitude} Lon: ${item.location.longitude}`}
-            />
-          </ListItem>
+          <PinListItem
+            key={uuid()}
+            handleClick={() => listItemClick(item.id)}
+            item={item}
+            index={index}
+          />
         ))}
       </List>
     </PerfectScrollbar>
