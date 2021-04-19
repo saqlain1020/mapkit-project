@@ -17,10 +17,11 @@ import MyLocationIcon from "@material-ui/icons/MyLocation";
 
 let span = new mapkit.CoordinateSpan(0.0125, 0.0125);
 
-let regionStart = new mapkit.CoordinateRegion(
-  new mapkit.Coordinate(37.3327, -122.0053),
-  span
-);
+// let regionStart = new mapkit.CoordinateRegion(
+//   new mapkit.Coordinate(37.3327, -122.0053),
+//   span
+// );
+
 
 var mapRef;
 
@@ -29,13 +30,13 @@ const MapPage = ({ pins, setAllPins }) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const mapDivRef = React.createRef();
-  const [region, setRegion] = React.useState(regionStart);
+  // const [region, setRegion] = React.useState(regionStart);
   const [slide, setSlide] = React.useState(false);
 
   //Render map wheneven new pins update
   React.useEffect(() => {
     renderMap();
-  }, [pins, region]);
+  }, [pins]);
 
   //initialize mapkit
   mapkit.init({
@@ -50,7 +51,7 @@ const MapPage = ({ pins, setAllPins }) => {
       new mapkit.Coordinate(latitude, longitude),
       new mapkit.CoordinateSpan(0.1, 0.1)
     );
-    setRegion(reg);
+    mapRef.setRegionAnimated(reg);
   };
 
   //add all initial pins on map
@@ -93,7 +94,7 @@ const MapPage = ({ pins, setAllPins }) => {
     if (mapDivRef.current) {
       document.querySelector("#map").innerHTML = "";
       var map = new mapkit.Map("map", {
-        region: region,
+        // region: region,
         showsCompass: mapkit.FeatureVisibility.Visible,
         showsZoomControl: true,
         showsMapTypeControl: true,
@@ -101,18 +102,22 @@ const MapPage = ({ pins, setAllPins }) => {
         showsScale: mapkit.FeatureVisibility.Visible,
       });
       mapRef = map;
+      setRegionCurrent();
       initAnnotations();
     }
   };
+
+  //set map to current location
   const setRegionCurrent = async () => {
+    // console.log(mapRef)
     let currentLocation = await getGeolocation();
     changeRegion(currentLocation);
   };
   React.useEffect(() => {
-    setRegionCurrent();
     let int = setInterval(() => {
       if (mapDivRef.current) {
         renderMap();
+
         clearInterval(int);
       }
     }, 300);
@@ -142,20 +147,28 @@ const MapPage = ({ pins, setAllPins }) => {
 
   //List menu click
   const listItemClick = (id) => {
-    let anno = pins.map((item) => {
-      console.log(item);
-      if (item.id === id) {
-        changeRegion(item.location);
+    mapRef.annotations.forEach((item) => {
+      if (item.data.id === id) {
+        console.log(item);
         item.selected = true;
-        return item;
-      } else {
-        item.selected = false;
-        return item;
+        changeRegion(item.coordinate);
       }
     });
-    setAllPins(anno);
+
+    // let anno = pins.map((item) => {
+    //   if (item.id === id) {
+    //     changeRegion(item.location);
+    //     item.selected = true;
+    //     return item;
+    //   } else {
+    //     item.selected = false;
+    //     return item;
+    //   }
+    // });
+    // setAllPins(anno);
   };
 
+  //Don't save current pin
   const cancelPin = () => {
     let anno = pins;
     anno.pop();
