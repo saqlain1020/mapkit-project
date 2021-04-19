@@ -12,6 +12,7 @@ import { setAllPins, sendApiPin } from "src/Redux/pins/pinsActions";
 import MapPinConfirmation from "src/Components/MapPinConfirmation/MapPinConfirmation";
 import PinsSidebar from "src/Components/PinsSidebar/PinsSidebar";
 import shapeAnnotations from "src/Util/shapeAnnotations";
+import getGeolocation from "src/Util/getGeolocation";
 
 let span = new mapkit.CoordinateSpan(0.0125, 0.0125);
 
@@ -102,9 +103,12 @@ const MapPage = ({ pins, setAllPins }) => {
       initAnnotations();
     }
   };
-
+  const setRegionCurrent = async () => {
+    let currentLocation = await getGeolocation();
+    changeRegion(currentLocation);
+  };
   React.useEffect(() => {
-    // getApiPins();
+    setRegionCurrent();
     let int = setInterval(() => {
       if (mapDivRef.current) {
         renderMap();
