@@ -11,6 +11,7 @@ import { connect } from "react-redux";
 import { setAllPins, sendApiPin } from "src/Redux/pins/pinsActions";
 import MapPinConfirmation from "src/Components/MapPinConfirmation/MapPinConfirmation";
 import PinsSidebar from "src/Components/PinsSidebar/PinsSidebar";
+import shapeAnnotations from "src/Util/shapeAnnotations";
 
 let span = new mapkit.CoordinateSpan(0.0125, 0.0125);
 
@@ -114,7 +115,7 @@ const MapPage = ({ pins, setAllPins }) => {
 
   //Add pin menu btn after entry
   const addPin = ({ title, subtitle, glyphText, color }) => {
-    console.log(mapRef);
+    setOpen(false);
     let { latitude, longitude } = mapRef.center;
     let obj = {
       id: uuid(),
@@ -159,8 +160,10 @@ const MapPage = ({ pins, setAllPins }) => {
 
   // sendPin to db
   const savePin = () => {
-    let pin = pins[pins.length - 1];
+    let shapedAnnos = shapeAnnotations(mapRef.annotations);
+    let pin = shapedAnnos[shapedAnnos.length - 1];
     sendApiPin(pin);
+    setAllPins(shapedAnnos);
     setSlide(false);
   };
 
