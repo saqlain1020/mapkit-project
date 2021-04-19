@@ -15,14 +15,13 @@ import shapeAnnotations from "src/Util/shapeAnnotations";
 import getGeolocation from "src/Util/getGeolocation";
 import MyLocationIcon from "@material-ui/icons/MyLocation";
 
-let span = new mapkit.CoordinateSpan(0.0125, 0.0125);
-
-// let regionStart = new mapkit.CoordinateRegion(
-//   new mapkit.Coordinate(37.3327, -122.0053),
-//   span
-// );
-
 var mapRef;
+//initialize mapkit
+mapkit.init({
+  authorizationCallback: async (done) => {
+    done(await getToken());
+  },
+});
 
 const MapPage = ({ pins, setAllPins }) => {
   const [dialog, setDialog] = React.useState(false);
@@ -37,13 +36,6 @@ const MapPage = ({ pins, setAllPins }) => {
     // renderMap();
     initAnnotations();
   }, [pins]);
-
-  //initialize mapkit
-  mapkit.init({
-    authorizationCallback: async (done) => {
-      done(await getToken());
-    },
-  });
 
   //change center of map
   const changeRegion = ({ latitude, longitude }) => {
