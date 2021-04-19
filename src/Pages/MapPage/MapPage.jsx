@@ -22,7 +22,6 @@ let span = new mapkit.CoordinateSpan(0.0125, 0.0125);
 //   span
 // );
 
-
 var mapRef;
 
 const MapPage = ({ pins, setAllPins }) => {
@@ -33,9 +32,10 @@ const MapPage = ({ pins, setAllPins }) => {
   // const [region, setRegion] = React.useState(regionStart);
   const [slide, setSlide] = React.useState(false);
 
-  //Render map wheneven new pins update
+  //Initializes pins when pins state change
   React.useEffect(() => {
-    renderMap();
+    // renderMap();
+    initAnnotations();
   }, [pins]);
 
   //initialize mapkit
@@ -56,6 +56,7 @@ const MapPage = ({ pins, setAllPins }) => {
 
   //add all initial pins on map
   const initAnnotations = () => {
+    if (mapRef?.annotations) mapRef.removeAnnotations(mapRef.annotations);
     pins.forEach((item) => {
       addAnnotation(item);
     });
@@ -117,7 +118,6 @@ const MapPage = ({ pins, setAllPins }) => {
     let int = setInterval(() => {
       if (mapDivRef.current) {
         renderMap();
-
         clearInterval(int);
       }
     }, 300);
@@ -136,8 +136,8 @@ const MapPage = ({ pins, setAllPins }) => {
       draggable: true,
       selected: true,
       location: {
-        latitude: latitude + 1,
-        longitude: longitude + 1,
+        latitude: latitude,
+        longitude: longitude,
       },
     };
     setAllPins([...pins, obj]);
