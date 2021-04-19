@@ -101,7 +101,7 @@ const MapPage = ({ pins, setAllPins }) => {
         showsMapTypeControl: true,
         isRotationEnabled: true,
         showsScale: mapkit.FeatureVisibility.Visible,
-        padding: new mapkit.Padding(20,20,20,50),
+        padding: new mapkit.Padding(20, 20, 20, 50),
       });
       mapRef = map;
       setRegionCurrent();
@@ -115,13 +115,9 @@ const MapPage = ({ pins, setAllPins }) => {
     let currentLocation = await getGeolocation();
     changeRegion(currentLocation);
   };
+
   React.useEffect(() => {
-    let int = setInterval(() => {
-      if (mapDivRef.current) {
-        renderMap();
-        clearInterval(int);
-      }
-    }, 300);
+    renderMap();
   }, []);
 
   //Add pin menu btn after entry
