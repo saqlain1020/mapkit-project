@@ -34,9 +34,10 @@ export const getApiPins = () => async (dispatch) => {
   }
 };
 
-export const sendApiPin = async (pin) => {
+export const sendApiPin = async (id) => {
   try {
     let uid = store.getState().auth?.uid;
+    let pin = store.getState().pins.allPins.find((item) => item.id === id);
     pin.draggable = false;
     pin.selected = false;
     if (uid) {

@@ -1,5 +1,11 @@
 import React from "react";
-import { Button, Dialog, makeStyles, TextField } from "@material-ui/core";
+import {
+  Button,
+  Dialog,
+  makeStyles,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -9,11 +15,16 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexFlow: "column",
     justifyContent: "space-between",
-    height: 300,
+    width: 300,
+    height: 350,
+  },
+  cancelBtn: {
+    color: "red",
+    borderColor: "red",
   },
 }));
 
-const AddPinDIalog = ({ open, onClose, callback }) => {
+const AddPinDIalog = ({ open, onClose, callback, cancel }) => {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
@@ -36,28 +47,34 @@ const AddPinDIalog = ({ open, onClose, callback }) => {
     });
   };
 
+  const handleClose = () => {
+    cancel();
+    onClose();
+  };
+
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       PaperProps={{ className: classes.root }}
     >
       <form onSubmit={handleClick} className={classes.form}>
+        <Typography variant="h4" align="center">
+          <b>Pin Info</b>
+        </Typography>
         <TextField
           name="title"
           label="title"
           type="text"
           value={state.title}
           onChange={handleInput}
-          required
         />
         <TextField
-          label="subtitle*"
+          label="subtitle"
           type="text"
           name="subtitle"
           value={state.subtitle}
           onChange={handleInput}
-          required
         />
         <TextField
           label="color"
@@ -82,6 +99,14 @@ const AddPinDIalog = ({ open, onClose, callback }) => {
           type="submit"
         >
           Add
+        </Button>
+        <Button
+          variant="outlined"
+          className={classes.cancelBtn}
+          style={{ marginTop: 5 }}
+          onClick={handleClose}
+        >
+          Cancel
         </Button>
       </form>
     </Dialog>

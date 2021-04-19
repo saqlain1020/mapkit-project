@@ -9,9 +9,7 @@ import { v4 as uuid } from "uuid";
 import AddPinDIalog from "src/Components/AddPinDialog/AddPinDIalog";
 import { connect } from "react-redux";
 import { setAllPins, sendApiPin } from "src/Redux/pins/pinsActions";
-import MapPinConfirmation from "src/Components/MapPinConfirmation/MapPinConfirmation";
 import PinsSidebar from "src/Components/PinsSidebar/PinsSidebar";
-import shapeAnnotations from "src/Util/shapeAnnotations";
 import getGeolocation from "src/Util/getGeolocation";
 import MyLocationIcon from "@material-ui/icons/MyLocation";
 
@@ -28,14 +26,30 @@ const MapPage = ({ pins, setAllPins }) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const mapDivRef = React.createRef();
-  // const [region, setRegion] = React.useState(regionStart);
-  const [slide, setSlide] = React.useState(false);
+  const [id, setId] = React.useState("");
 
   //Initializes pins when pins state change
   React.useEffect(() => {
     // renderMap();
     initAnnotations();
   }, [pins]);
+
+  const tapEvent = (e) => {
+    let { latitude, longitude } = mapRef.convertPointOnPageToCoordinate(
+      e.pointOnPage
+    );
+    let id = uuid();
+    addAnnotation({
+      location: {
+        latitude,
+        longitude,
+      },
+      selected: true,
+      id,
+    });
+    setDialog(true);
+    setId(id);
+  };
 
   //change center of map
   const changeRegion = ({ latitude, longitude }) => {
@@ -56,8 +70,8 @@ const MapPage = ({ pins, setAllPins }) => {
 
   //Add new pin on map
   const addAnnotation = ({
-    title,
-    subtitle,
+    title = "",
+    subtitle = "",
     glyphText = "",
     color = "#2ecc71",
     location: { latitude, longitude },
@@ -98,12 +112,12 @@ const MapPage = ({ pins, setAllPins }) => {
       mapRef = map;
       setRegionCurrent();
       initAnnotations();
+      map.addEventListener("single-tap", tapEvent);
     }
   };
 
   //set map to current location
   const setRegionCurrent = async () => {
-    // console.log(mapRef)
     let currentLocation = await getGeolocation();
     changeRegion(currentLocation);
   };
@@ -115,23 +129,30 @@ const MapPage = ({ pins, setAllPins }) => {
   //Add pin menu btn after entry
   const addPin = ({ title, subtitle, glyphText, color }) => {
     setOpen(false);
-    let { latitude, longitude } = mapRef.center;
+    let coordinate;
+    mapRef.annotations.some((item) => {
+      if (item.data.id === id) {
+        coordinate = item.coordinate;
+        return true;
+      }
+      return false
+    });
     let obj = {
-      id: uuid(),
+      id,
       title,
       subtitle,
       glyphText,
       color,
-      draggable: true,
-      selected: true,
+      draggable: false,
+      selected: false,
       location: {
-        latitude: latitude,
-        longitude: longitude,
+        latitude: coordinate.latitude,
+        longitude: coordinate.longitude,
       },
     };
     setAllPins([...pins, obj]);
     changeRegion(obj.location);
-    setSlide(true);
+    savePin();
   };
 
   //List menu click
@@ -143,35 +164,16 @@ const MapPage = ({ pins, setAllPins }) => {
         changeRegion(item.coordinate);
       }
     });
-
-    // let anno = pins.map((item) => {
-    //   if (item.id === id) {
-    //     changeRegion(item.location);
-    //     item.selected = true;
-    //     return item;
-    //   } else {
-    //     item.selected = false;
-    //     return item;
-    //   }
-    // });
-    // setAllPins(anno);
   };
 
   //Don't save current pin
   const cancelPin = () => {
-    let anno = pins;
-    anno.pop();
-    setAllPins([...anno]);
-    setSlide(false);
+    initAnnotations();
   };
 
   // sendPin to db
   const savePin = () => {
-    let shapedAnnos = shapeAnnotations(mapRef.annotations);
-    let pin = shapedAnnos[shapedAnnos.length - 1];
-    sendApiPin(pin);
-    setAllPins(shapedAnnos);
-    setSlide(false);
+    sendApiPin(id);
   };
 
   return (
@@ -186,13 +188,12 @@ const MapPage = ({ pins, setAllPins }) => {
           <MenuIcon fontSize="large" style={{ color: "#222" }} />
         </IconButton>
         <div id="map" ref={mapDivRef} onClick={() => setOpen(false)}></div>
-
-        <MapPinConfirmation cancel={cancelPin} save={savePin} open={slide} />
       </div>
       <AddPinDIalog
         open={dialog}
         onClose={() => setDialog(false)}
         callback={addPin}
+        cancel={cancelPin}
       />
       <MyLocationIcon
         className={classes.myLocationIco}
