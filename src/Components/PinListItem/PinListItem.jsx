@@ -33,7 +33,7 @@ const PinListItem = ({ handleClick, item, index, deletePin }) => {
           <ListItemText
             className={classes.listText}
             primary={`${index + 1}. ${item.title}`}
-            secondary={`Lat: ${item.location.latitude} Lon: ${item.location.longitude}`}
+            secondary={`Lat: ${item.location.latitude.toFixed(4)} Lon: ${item.location.longitude.toFixed(4)}`}
           />
         </ListItem>
       </ContextMenuTrigger>

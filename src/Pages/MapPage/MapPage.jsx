@@ -13,6 +13,7 @@ import MapPinConfirmation from "src/Components/MapPinConfirmation/MapPinConfirma
 import PinsSidebar from "src/Components/PinsSidebar/PinsSidebar";
 import shapeAnnotations from "src/Util/shapeAnnotations";
 import getGeolocation from "src/Util/getGeolocation";
+import MyLocationIcon from "@material-ui/icons/MyLocation";
 
 let span = new mapkit.CoordinateSpan(0.0125, 0.0125);
 
@@ -34,7 +35,7 @@ const MapPage = ({ pins, setAllPins }) => {
   //Render map wheneven new pins update
   React.useEffect(() => {
     renderMap();
-  }, [pins]);
+  }, [pins, region]);
 
   //initialize mapkit
   mapkit.init({
@@ -47,7 +48,7 @@ const MapPage = ({ pins, setAllPins }) => {
   const changeRegion = ({ latitude, longitude }) => {
     let reg = new mapkit.CoordinateRegion(
       new mapkit.Coordinate(latitude, longitude),
-      new mapkit.CoordinateSpan(0.0125, 0.0125)
+      new mapkit.CoordinateSpan(0.1, 0.1)
     );
     setRegion(reg);
   };
@@ -182,7 +183,7 @@ const MapPage = ({ pins, setAllPins }) => {
         <IconButton className={classes.menuBtn} onClick={() => setOpen(!open)}>
           <MenuIcon fontSize="large" style={{ color: "#222" }} />
         </IconButton>
-        <div id="map" ref={mapDivRef}></div>
+        <div id="map" ref={mapDivRef} onClick={() => setOpen(false)}></div>
 
         <MapPinConfirmation cancel={cancelPin} save={savePin} open={slide} />
       </div>
@@ -190,6 +191,11 @@ const MapPage = ({ pins, setAllPins }) => {
         open={dialog}
         onClose={() => setDialog(false)}
         callback={addPin}
+      />
+      <MyLocationIcon
+        className={classes.myLocationIco}
+        fontSize="large"
+        onClick={setRegionCurrent}
       />
     </div>
   );

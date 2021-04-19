@@ -21,5 +21,11 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
     transform: "translateX(10px) translateY(20px)",
   },
+  myLocationIco:{
+    position: "absolute",
+    top:"calc(100% - 80px)",
+    right: "20px",
+    color: "#191919",
+  }
 }));
 export default useStyles;
