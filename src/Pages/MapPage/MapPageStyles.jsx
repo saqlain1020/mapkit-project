@@ -23,8 +23,8 @@ const useStyles = makeStyles((theme) => ({
   },
   myLocationIco:{
     position: "absolute",
-    top:"calc(100% - 80px)",
-    right: "20px",
+    top:"calc(100% - 160px)",
+    right: "40px",
     color: "#191919",
   }
 }));

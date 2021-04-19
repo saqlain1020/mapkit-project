@@ -29,15 +29,20 @@ const PinListItem = ({ handleClick, item, index, deletePin }) => {
   return (
     <>
       <ContextMenuTrigger id={`${item.id}`}>
-        <ListItem button onClick={handleClick}>
+        <ListItem button onClick={handleClick} className="noselect">
           <ListItemText
             className={classes.listText}
             primary={`${index + 1}. ${item.title}`}
-            secondary={`Lat: ${item.location.latitude.toFixed(4)} Lon: ${item.location.longitude.toFixed(4)}`}
+            secondary={`Lat: ${item.location.latitude.toFixed(
+              4
+            )} Lon: ${item.location.longitude.toFixed(4)}`}
           />
         </ListItem>
       </ContextMenuTrigger>
-      <ContextMenu id={`${item.id}`} className={classes.contextMenu}>
+      <ContextMenu
+        id={`${item.id}`}
+        className={`${classes.contextMenu} noselect`}
+      >
         <ContextMenuItem
           className={classes.contextItem}
           onClick={() => deletePin(item.id)}

@@ -101,6 +101,7 @@ const MapPage = ({ pins, setAllPins }) => {
         showsMapTypeControl: true,
         isRotationEnabled: true,
         showsScale: mapkit.FeatureVisibility.Visible,
+        padding: new mapkit.Padding(20,20,20,50),
       });
       mapRef = map;
       setRegionCurrent();
